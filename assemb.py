@@ -84,13 +84,14 @@ def parse(tokens):
 
 def isValidParam(param):
     ''' true if param is between 0000 - 1111 '''
+    if len(param) != 4: return False
     for char in param:
         if char != '1' or char != '0':
             return False
     return True
 
 def outputObj(obj):
-    fOut = open(('%s.out' % sys.argv[1]), 'w')
+    fOut = open(('%s.out' % sys.argv[1].split('.')[0]), 'w')
     for e in obj:
         fOut.write(e)
     fOut.close()
