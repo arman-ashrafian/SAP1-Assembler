@@ -1,0 +1,5 @@
+LDA 0001
+out
+ADD 1000
+out
+HLT
