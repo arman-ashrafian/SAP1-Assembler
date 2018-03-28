@@ -2,7 +2,7 @@ import sys
 import PyQt5
 from PyQt5.QtWidgets import *
 from PyQt5 import QtCore
-import assemb as sap1
+import assembler as sap1
 from mainwindow import Ui_MainWindow
 
 # Enable High-DPI Scaling
@@ -21,7 +21,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         code = self.code.toPlainText().upper()
         tokens = sap1.tokenize(code)
         obj = sap1.parse(tokens)
-        self.outputCode(obj)
+
+        if type(obj) == str:
+            self.errorMessage.setText(obj)
+            self.errorMessage.show()
+            self.errorMessage.setStyleSheet("color: red")
+            self.output.setText("")
+        else:
+            self.errorMessage.show()
+            self.errorMessage.setStyleSheet("color: black")
+            self.errorMessage.setText("Assembling...")
+            self.outputCode(obj)
+            self.errorMessage.setText("Done.")
     
     def outputCode(self, obj):
         code = ""
