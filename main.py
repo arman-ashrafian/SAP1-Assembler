@@ -14,37 +14,62 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setupUi(self)
         self.errorMessage.hide()
 
-        # connect assemble button
+        # connect buttons
         self.assembleButton.clicked.connect(lambda: self.assembleClicked())
-	
+        self.disassemButton.clicked.connect(lambda: self.disassemClicked())
+
     def assembleClicked(self):
-        code = self.code.toPlainText().upper()
+        code = self.assembly.toPlainText().upper()
         tokens = sap1.tokenize(code)
         obj = sap1.parse(tokens)
 
         if type(obj) == str:
             self.errorMessage.setText(obj)
             self.errorMessage.show()
-            self.errorMessage.setStyleSheet("color: red")
-            self.output.setText("")
+            self.errorMessage.setStyleSheet("color: rgb(200,10,10);")
+            self.binary.setPlainText("")
         else:
             self.errorMessage.show()
             self.errorMessage.setStyleSheet("color: black")
             self.errorMessage.setText("Assembling...")
-            self.outputCode(obj)
+            self.outputBinary(obj)
             self.errorMessage.setText("Done.")
-    
-    def outputCode(self, obj):
+
+    def disassemClicked(self):
+        code = self.binary.toPlainText()
+        tokens = sap1.tokenize(code)
+        asm = sap1.disassemble(tokens)
+
+        if type(asm) == str:
+            self.errorMessage.setText(asm)
+            self.errorMessage.show()
+            self.errorMessage.setStyleSheet("color: rgb(200,10,10);")
+            self.assembly.setPlainText("")
+        else:
+            self.errorMessage.show()
+            self.errorMessage.setStyleSheet("color: black")
+            self.errorMessage.setText("Assembling...")
+            self.outputAsm(asm)
+            self.errorMessage.setText("Done.")
+        
+    def outputAsm(self, asm):
+        code = ""
+        for line in asm:
+            code += line
+            code += '\n'
+        self.assembly.setPlainText(code)
+
+    def outputBinary(self, obj):
         code = ""
         for e in obj:
             code += e
-        self.output.setText(code)
+        self.binary.setPlainText(code)
 
 def main():
     app = QApplication(sys.argv)
 
     window = MainWindow()
-    window.resize(800, 480)
+    window.resize(1200, 720)
     window.show()
 
     sys.exit(app.exec_())
